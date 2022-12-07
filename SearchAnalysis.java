@@ -15,8 +15,11 @@ public class SearchAnalysis {
         // 1.a Read the data from the dataset
         // 1.b store the data in an array List; Create a node for each word and add it
         // to the list
-        int searchMethod = Integer.parseInt(args[0]);
-        String dir = "dataset";
+        int searchMethod = 0;
+        if (args.length > 0) {
+            searchMethod = Integer.parseInt(args[0]);
+        }
+        String dir = "dataset/tst";
         if (args.length > 0) {
             dir = args[1];
         }
@@ -26,7 +29,7 @@ public class SearchAnalysis {
         }
 
         ArrayList<String> words = readDataset(dir);
-
+        System.out.printf("Exahstive Search Method of (%s) = %d\n", searchKey, exhaustiveSearch(words, searchKey));
         // 2. Place your code here
         // 2.a Call exhaustive search to return the frequency of the word occurences in
         // the dataset
@@ -67,8 +70,9 @@ public class SearchAnalysis {
         ArrayList<String> files = new ArrayList<String>();
         File[] folder = new File(dir).listFiles();
         for (File f : folder)
-            if (f.isFile())
+            if (f.isFile()) {
                 files.add(f.getAbsolutePath());
+            }
         // for(String s : files) System.out.println(s);
 
         for (String path : files) {
