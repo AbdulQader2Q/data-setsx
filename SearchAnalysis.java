@@ -15,24 +15,38 @@ public class SearchAnalysis {
         // 1.a Read the data from the dataset
         // 1.b store the data in an array List; Create a node for each word and add it
         // to the list
-        int searchMethod = 0;
+        int searchMethod = 1;
         if (args.length > 0) {
             searchMethod = Integer.parseInt(args[0]);
         }
-        String dir = "dataset/tst";
+        String dir = "dataset/ds1";
         if (args.length > 0) {
             dir = args[1];
         }
-        String searchKey = "the";
-        if (args.length > 1) {
-            searchKey = args[2];
-        }
+        String[] searchKeys = { "the", "night" };
 
-        ArrayList<String> words = readDataset(dir);
-        System.out.printf("Exahstive Search Method of (%s) = %d\n", searchKey, exhaustiveSearch(words, searchKey));
         // 2. Place your code here
         // 2.a Call exhaustive search to return the frequency of the word occurences in
         // the dataset
+        if (searchMethod == 1) {
+            printSeperator();
+            long startTime = getStartTime();
+            System.out.println("Started reading files from directory: " + dir);
+            ArrayList<String> words = loadToArrayList(dir);
+            long endTime = getEndTime();
+            System.out.println(endTime - startTime + " milliseconds");
+            printSeperator();
+            for (String searchKey : searchKeys) {
+                printSeperator();
+                startTime = getStartTime();
+                System.out.println("Searching key: " + searchKey);
+                endTime = getEndTime();
+                System.out.println(endTime - startTime + " milliseconds");
+                System.out.println(searchKey + " " + exhaustiveSearch(words, searchKey));
+                printSeperator();
+            }
+
+        }
         // (Note: You need to impelement exhaustive search method below)
         // 2.b Calculate and display time taken to run exhaustive search
 
@@ -54,6 +68,22 @@ public class SearchAnalysis {
 
     }
 
+    private static void printSeperator() {
+        System.out.println("*****");
+    }
+
+    private static long getStartTime() {
+        long startTime = System.currentTimeMillis();
+        System.out.println("Start Time: " + startTime);
+        return startTime;
+    }
+
+    private static long getEndTime() {
+        long endTime = System.currentTimeMillis();
+        System.out.println("End Time: " + endTime);
+        return endTime;
+    }
+
     public static int exhaustiveSearch(ArrayList<String> words, String searchKey) {
         int frequency = 0;
         for (String word : words) {
@@ -64,9 +94,12 @@ public class SearchAnalysis {
         return frequency;
     }
 
-    public static ArrayList<String> readDataset(String dir) {
+    public static String[] splitWords(String s) {
+        System.out.println(s);
+        return s.split("\\s|\\,|\\.|\\!|\\?|\\;");
+    }
 
-        ArrayList<String> words = new ArrayList<String>();
+    public static ArrayList<String> getFilesFromDirectory(String dir) {
         ArrayList<String> files = new ArrayList<String>();
         File[] folder = new File(dir).listFiles();
         for (File f : folder)
@@ -74,15 +107,18 @@ public class SearchAnalysis {
                 files.add(f.getAbsolutePath());
             }
         // for(String s : files) System.out.println(s);
+        return files;
+    }
 
-        for (String path : files) {
+    public static ArrayList<String> loadToArrayList(String dir) {
+        ArrayList<String> words = new ArrayList<String>();
+        for (String path : getFilesFromDirectory(dir)) {
             File file = new File(path);
             Scanner sc;
             try {
                 sc = new Scanner(file);
                 sc.useDelimiter("\\Z");
-
-                for (String word : sc.next().split("\\s|\\,|\\.|\\!|\\?|\\;"))
+                for (String word : splitWords(sc.nextLine()))
                     if (word.length() > 0)
                         words.add(word);
 
@@ -91,7 +127,29 @@ public class SearchAnalysis {
                 e.printStackTrace();
             }
         }
+        System.out.println("Loaded all files in ArrayList");
         return words;
+    }
+
+    public static BST loadToBST(String dir) {
+        BST tree = new BST();
+        for (String path : getFilesFromDirectory(dir)) {
+            File file = new File(path);
+            Scanner sc;
+            try {
+                sc = new Scanner(file);
+                sc.useDelimiter("\\Z");
+                for (String word : splitWords(sc.next()))
+                    if (word.length() > 0)
+                        tree.insert(word);
+
+                sc.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Loaded all files in BST");
+        return tree;
     }
 
 }
