@@ -1,7 +1,3 @@
-/*
-   CS210-Project2
-   Exhaustive Search and Bianry Search complexity comparison and analysis
- */
 package searchanalysis;
 //@author Dr. Sawsan Alhalawani
 
@@ -15,7 +11,8 @@ public class SearchAnalysis {
         // 1.a Read the data from the dataset
         // 1.b store the data in an array List; Create a node for each word and add it
         // to the list
-        int searchMethod = 1;
+        System.out.println("\n\n");
+        int searchMethod = 3;
         if (args.length > 0) {
             searchMethod = Integer.parseInt(args[0]);
         }
@@ -28,6 +25,7 @@ public class SearchAnalysis {
         // 2. Place your code here
         // 2.a Call exhaustive search to return the frequency of the word occurences in
         // the dataset
+
         if (searchMethod == 1) {
             printSeperator();
             long startTime = getStartTime();
@@ -39,14 +37,57 @@ public class SearchAnalysis {
             for (String searchKey : searchKeys) {
                 printSeperator();
                 startTime = getStartTime();
-                System.out.println("Searching key: " + searchKey);
+                int frequency = exhaustiveSearch(words, searchKey);
                 endTime = getEndTime();
+
+                System.out.println("Searching key: " + searchKey);
                 System.out.println(endTime - startTime + " milliseconds");
-                System.out.println(searchKey + " " + exhaustiveSearch(words, searchKey));
+                System.out.println(searchKey + " " + frequency);
                 printSeperator();
             }
-
         }
+        else if(searchMethod == 2){ ///BST
+            printSeperator();
+            long startTime = getStartTime();
+            System.out.println("Started reading files from directory: " + dir);
+            BST BST_tree = loadToBST(dir);
+            long endTime = getEndTime();
+            System.out.println(endTime - startTime + " milliseconds");
+            printSeperator();
+            for (String searchKey : searchKeys) {
+                printSeperator();
+                startTime = getStartTime();
+                int frequency = BST_tree.searchTree(searchKey);
+                endTime = getEndTime();
+
+                System.out.println("Searching key: " + searchKey);
+                System.out.println(searchKey + " " + frequency);
+                System.out.println(endTime - startTime + " milliseconds");
+                printSeperator();
+            }
+        }
+        else if(searchMethod == 3){ //AVL
+            printSeperator();
+            long startTime = getStartTime();
+            System.out.println("Started reading files from directory: " + dir);
+            AVL AVL_tree = loadToAVL(dir);
+            long endTime = getEndTime();
+            System.out.println(endTime - startTime + " milliseconds");
+            printSeperator();
+            for (String searchKey : searchKeys) {
+                printSeperator();
+                startTime = getStartTime();
+                int frequency = AVL_tree.searchTree(searchKey);
+                endTime = getEndTime();
+
+                System.out.println("Searching key: " + searchKey);
+                System.out.println(searchKey + " " + frequency);
+                System.out.println(endTime - startTime + " milliseconds");
+                printSeperator();
+            }
+        }
+        else System.out.println("Search Method is not valid!");
+        
         // (Note: You need to impelement exhaustive search method below)
         // 2.b Calculate and display time taken to run exhaustive search
 
@@ -94,11 +135,6 @@ public class SearchAnalysis {
         return frequency;
     }
 
-    public static String[] splitWords(String s) {
-        System.out.println(s);
-        return s.split("\\s|\\,|\\.|\\!|\\?|\\;");
-    }
-
     public static ArrayList<String> getFilesFromDirectory(String dir) {
         ArrayList<String> files = new ArrayList<String>();
         File[] folder = new File(dir).listFiles();
@@ -106,9 +142,10 @@ public class SearchAnalysis {
             if (f.isFile()) {
                 files.add(f.getAbsolutePath());
             }
-        // for(String s : files) System.out.println(s);
         return files;
     }
+
+    final static String REGEX = "\\s|\\,|\\.|\\!|\\?|\\;";
 
     public static ArrayList<String> loadToArrayList(String dir) {
         ArrayList<String> words = new ArrayList<String>();
@@ -118,7 +155,7 @@ public class SearchAnalysis {
             try {
                 sc = new Scanner(file);
                 sc.useDelimiter("\\Z");
-                for (String word : splitWords(sc.nextLine()))
+                for (String word : sc.next().split(REGEX))
                     if (word.length() > 0)
                         words.add(word);
 
@@ -139,7 +176,7 @@ public class SearchAnalysis {
             try {
                 sc = new Scanner(file);
                 sc.useDelimiter("\\Z");
-                for (String word : splitWords(sc.next()))
+                for (String word : sc.next().split(REGEX))
                     if (word.length() > 0)
                         tree.insert(word);
 
@@ -148,8 +185,31 @@ public class SearchAnalysis {
                 e.printStackTrace();
             }
         }
-        System.out.println("Loaded all files in BST");
+        System.out.println("Loaded all files in BST tree");
         return tree;
     }
 
+    public static AVL loadToAVL(String dir){
+        AVL tree = new AVL();
+        for (String path : getFilesFromDirectory(dir)) {
+            File file = new File(path);
+            Scanner sc;
+            try {
+                sc = new Scanner(file);
+                sc.useDelimiter("\\Z");
+                for (String word : sc.next().split(REGEX))
+                    if (word.length() > 0)
+                        tree.insert(word);
+
+                sc.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Loaded all files in AVL tree");
+
+        tree.ff();
+
+        return tree;
+    }
 }

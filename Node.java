@@ -6,7 +6,7 @@ class Node {
 	Node parent; // pointer to the parent
 	Node left; // pointer to left child
 	Node right; // pointer to right child
-        int bf; // balance factor of the node
+    int bf; // balance factor of the node
 
 	public Node(String k) {
 		key = k;

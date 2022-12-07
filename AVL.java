@@ -1,4 +1,7 @@
 package searchanalysis;
+
+import java.util.ArrayList;
+
 //AVL Binary search tree implementation in Java
 //Main Source: AlgorithmTutor
 public class AVL {
@@ -7,11 +10,20 @@ public class AVL {
 		root = null;
 	}
         
-        //searches for the key in the AVL, returns the frequency or -1 (if not found).
-	private int searchTreeHelper(Node node, int key) {
+    //searches for the key in the AVL, returns the frequency or -1 (if not found).
+	private int searchTreeHelper(Node node, String key) {
 		// Place your code here 
-                return 0;
-        }
+		if(node.key.compareTo(key) == 0)
+			return node.frequency;
+		
+		else if(node.key.compareTo(key) > 0 && node.left != null)
+			return searchTreeHelper(node.left, key);
+		
+		else if(node.key.compareTo(key) < 0 && node.right != null)
+			return searchTreeHelper(node.right, key);
+		
+		return -1;
+	}
         
 	// update the balance factor the node
 	private void updateBalance(Node node) {
@@ -99,7 +111,7 @@ public class AVL {
 
 	// search the tree for the key k
 	// and return the frequency of the key
-	public int searchTree(int k) {
+	public int searchTree(String k) {
 		return searchTreeHelper(this.root, k);
 	}
 
@@ -150,21 +162,47 @@ public class AVL {
 	}
 
 
-        // insert the key to the tree in its appropriate position 
-        // if it is non-existent
-        //Otherwise, the key/value (frequency) is updated/incremented.
-	public void insert(int key) {
+	// insert the key to the tree in its appropriate position 
+	// if it is non-existent
+	//Otherwise, the key/value (frequency) is updated/incremented.
+	public void insert(String key) {
 		// PART 1: Ordinary BST insert
-                // Place your code here 
-                // Uncomment PART2 after you are done with PART1
+		// Place your code here 
+		// Uncomment PART2 after you are done with PART1
 		
-
+		insertHelper(key, this.root);
+		
 		// PART 2: re-balance the node if necessary
-		//updateBalance(node);
+		updateBalance(node);
 	}
+	
+	
+	public Node insertHelper(String key, Node node) {
+		
+		if(node == null){
+			node = new Node(key);
+			node.frequency = 1;
+			this.root = node;
+			return node;
+		}
+		
+		else if(node.key.compareTo(key) > 0)
+			node.left = insertHelper(key, node.left);
+		
+		else if(node.key.compareTo(key) < 0)
+			node.right = insertHelper(key, node.right);
+		
+		else node.frequency++;
 
+		return node;
+	}
 	
-
-	
-	
+	public void ff(){
+		Node node = root;
+		System.out.println(node.key + " " + node.bf + " " + node.frequency);
+		node = root.left;
+		System.out.println(node.key + " " + node.bf + " " + node.frequency);
+		node = root.right;
+		System.out.println(node.key + " " + node.bf + " " + node.frequency);
+	}
 }
