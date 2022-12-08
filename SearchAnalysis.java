@@ -12,7 +12,11 @@ public class SearchAnalysis {
         // 1.b store the data in an array List; Create a node for each word and add it
         // to the list
         System.out.println("\n\n");
+        
+        
         int searchMethod = 3;
+        
+
         if (args.length > 0) {
             searchMethod = Integer.parseInt(args[0]);
         }
@@ -198,8 +202,11 @@ public class SearchAnalysis {
                 sc = new Scanner(file);
                 sc.useDelimiter("\\Z");
                 for (String word : sc.next().split(REGEX))
-                    if (word.length() > 0)
+                    if (word.length() > 0){
+                        System.out.println(word);
                         tree.insert(word);
+                        
+                    }
 
                 sc.close();
             } catch (FileNotFoundException e) {
@@ -207,9 +214,7 @@ public class SearchAnalysis {
             }
         }
         System.out.println("Loaded all files in AVL tree");
-
         tree.ff();
-
         return tree;
     }
 }
