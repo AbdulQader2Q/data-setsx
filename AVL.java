@@ -26,7 +26,6 @@ public class AVL {
         
 	// update the balance factor the node
 	private void updateBalance(Node node) {
-		System.out.println("\n\nrep---"+node.key+" "+node.parent.key);
 		if (node.bf < -1 || node.bf > 1) {
 			rebalance(node);
 			return;
@@ -185,8 +184,6 @@ public class AVL {
 			root.bf = 1;
 			root.frequency = 1;
 			root.parent = parent;
-			if(parent != null)
-			System.out.println(root.parent.key + " " + root.key);
 		}
 		else if(root.key.compareTo(key) > 0){
 			root.left = insertHelper(root.left, root, key);	
@@ -197,19 +194,10 @@ public class AVL {
 		else{
 			root.frequency++;
 		}
-		
+
+		/// Balance tree if current node is not balanced
 		if(Math.abs(getBF(root.left) - getBF(root.right)) == 2)
 			updateBalance(root);			
 		return root;
-	}
-	
-	public void ff(){
-		Node n = root;
-		System.out.println(n.key + "  " + n.frequency);
-	//	n = root.left;
-		System.out.println(n.key + "  " + n.frequency);
-	//	n = root.right;
-		System.out.println(n.key + "  " + n.frequency);
-	}
-	
+	}	
 }

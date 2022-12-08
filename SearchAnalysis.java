@@ -214,7 +214,6 @@ public class SearchAnalysis {
             }
         }
         System.out.println("Loaded all files in AVL tree");
-        tree.ff();
         return tree;
     }
 }
