@@ -13,18 +13,10 @@ public class SearchAnalysis {
         // to the list
         System.out.println("\n\n");
         
-        
-        int searchMethod = 3;
-        
+        int searchMethod = Integer.parseInt(args[0]);        
+        String dir = args[1];
 
-        if (args.length > 0) {
-            searchMethod = Integer.parseInt(args[0]);
-        }
-        String dir = "dataset/ds1";
-        if (args.length > 0) {
-            dir = args[1];
-        }
-        String[] searchKeys = { "the", "night" };
+        String[] searchKeys = Arrays.copyOfRange(args, 2, args.length);
 
         // 2. Place your code here
         // 2.a Call exhaustive search to return the frequency of the word occurences in
@@ -203,9 +195,7 @@ public class SearchAnalysis {
                 sc.useDelimiter("\\Z");
                 for (String word : sc.next().split(REGEX))
                     if (word.length() > 0){
-                        System.out.println(word);
                         tree.insert(word);
-                        
                     }
 
                 sc.close();
